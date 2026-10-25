@@ -3,6 +3,9 @@ on a message, replace the campaign snapshot; actions send commands and apply
 the same payload locally. What `ws` means is in
 [web/DEVELOPMENT.md](../../DEVELOPMENT.md).
 
+New stores stay option stores (`state`, `getters`, `actions`). `counter.ts` is
+scaffold and is not the pattern.
+
 The server side of that broadcast is
 [internal/httpapi](../../../internal/httpapi/README.md).
 

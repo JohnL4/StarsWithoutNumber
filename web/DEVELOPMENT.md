@@ -23,6 +23,14 @@ and replaces a module in the open page after a save. `npm run build` writes
 the static site to `web/dist`. The Go binary embeds that directory. Vite does
 not run on the published host.
 
+New single-file components use the Options API: `export default` with `data`,
+`computed`, `methods`, and lifecycle hooks such as `mounted`. Do not use
+`<script setup>` or the Composition API. New Pinia stores use the option form
+(`state`, `getters`, `actions`). Do not use a setup function. `App.vue`,
+`HomeView.vue`, `HelloWorld.vue`, `TheWelcome.vue`, and
+`src/stores/counter.ts` come from the scaffold. Copy the samples in
+[src/views](src/views/README.md) and [src/stores](src/stores/README.md).
+
 ## Install
 
 From the repository root. PowerShell needs the quoted `--`. Do not pass

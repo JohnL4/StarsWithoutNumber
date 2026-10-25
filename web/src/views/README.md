@@ -1,5 +1,8 @@
 This view owns the canvas. One Pixi application is mounted from here and destroyed in `beforeUnmount`.
 
+Views use the Options API. The sample below is the required style. Do not use
+`<script setup>` or the Composition API.
+
 ```vue
 <script lang="ts">
 import { mapState } from "pinia"

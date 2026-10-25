@@ -25,7 +25,8 @@ checksums. This module has no third-party requirements yet.
 - [internal/httpapi](internal/httpapi/README.md) will hold JSON handlers and
   the broadcast.
 - [web/DEVELOPMENT.md](web/DEVELOPMENT.md) is the frontend install, dev server,
-  and production build.
+  and production build, including the Options API rule for new Vue components
+  and Pinia stores.
 - [web/src/api](web/src/api/README.md) is the fetch client and the TypeScript
   character shape.
 - [web/src/vtt](web/src/vtt/README.md) is the virtual tabletop.
