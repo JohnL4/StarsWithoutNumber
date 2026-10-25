@@ -1,0 +1,7 @@
+/NoCommit/
+**/*.exe
+/data/*.db
+/data/*.db-wal
+/data/*.db-shm
+/web/node_modules/
+/web/dist/
