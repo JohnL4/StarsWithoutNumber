@@ -74,17 +74,21 @@ The canvas mount is in [src/views/README.md](src/views/README.md).
 
 ## Dev server
 
-From `web`:
+Use two terminals. From the repo root, start the Go server with the command
+in [cmd/server](../cmd/server/README.md). From `web`:
 
 ```powershell
 npm run dev
 ```
 
-Vite serves `http://localhost:5173` and proxies `/api` and `/ws` to the Go
-process. `ws` stands for WebSocket, and `/ws` is the path for that
+Open `http://localhost:5173`. Vite recompiles Vue files in memory. It does not
+write or read `web/dist`, and it does not rebuild Go. It proxies `/api` and
+`/ws` to port 8080. `ws` stands for WebSocket, and `/ws` is the path for that
 connection. `ws: true` on the proxy allows the browser to upgrade `/ws` from
-HTTP to a WebSocket. `/api` stays ordinary HTTP. Nothing listens on `/ws`
-until `cmd/server` exists. That server's route should use this same path.
+HTTP to a WebSocket. `/api` stays ordinary HTTP.
+
+A Go edit is picked up by stopping `go run` and starting it again. `go build`
+does not update this dev server, and restarting Vite does not either.
 
 ## Package the frontend
 
@@ -94,5 +98,7 @@ From `web`:
 npm run build
 ```
 
-That writes `web/dist`. The Linux binary build is in
-[cmd/server](../cmd/server/README.md).
+That writes `web/dist`. Run it before the Linux `go build` in
+[cmd/server](../cmd/server/README.md). No npm script builds or runs the Go
+server. `dev`, `build`, `build-only`, `preview`, and `type-check` are Vite or
+`vue-tsc`.

@@ -1,6 +1,12 @@
-This process will embed `web/dist`, serve the API, and broadcast campaign
-snapshots on a WebSocket at `/ws`. There is no `main` package here yet, so
-`go build ./cmd/server` fails until that file exists. What `ws` means is in
+`go run ./cmd/server`, from the repo root, listens on `127.0.0.1:8080` and
+serves `web/dist` from disk. `/api` and `/ws` respond 404. Embed remains how
+the Linux binary will carry the frontend. What `ws` means is in
+[web/DEVELOPMENT.md](../../web/DEVELOPMENT.md).
+
+`go run` compiles and serves. After a Go edit, stop that process and start it
+again. `npm run dev` does not recompile Go, and `go build` is not part of
+that loop. A frontend build is not required for an API change while the
+browser is on port 5173. The npm commands are in
 [web/DEVELOPMENT.md](../../web/DEVELOPMENT.md).
 
 The process listens on `127.0.0.1`. Caddy, or another reverse proxy,
@@ -13,9 +19,8 @@ example.com {
 }
 ```
 
-Build the frontend first. Those commands are in
-[web/DEVELOPMENT.md](../../web/DEVELOPMENT.md). From the repo root, with a
-`main` package in this directory that embeds `web/dist`:
+`go build` produces a binary. Build the frontend first. Those commands are in
+[web/DEVELOPMENT.md](../../web/DEVELOPMENT.md). From the repo root:
 
 ```powershell
 $env:GOOS = "linux"
@@ -34,7 +39,8 @@ Remove-Item Env:GOARCH
 
 Copy `swn` to the Linux machine. The database file is described in
 [data/README.md](../../data/README.md). Create an empty data directory the
-service user can write, such as `/var/lib/swn`. Run the binary there.
+service user can write, such as `/var/lib/swn`. This stub resolves `web/dist`
+from its working directory, so `go run` belongs at the repo root.
 
 ```ini
 [Unit]
