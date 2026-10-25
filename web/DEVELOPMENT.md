@@ -38,8 +38,9 @@ npm install -D vite-plugin-pwa
 ```
 
 After the scaffold exists, add the PWA plugin and the dev proxy to
-`vite.config.ts`. Leave the rest of the file as the scaffold wrote it. Icons
-and a full manifest can wait until a home-screen icon matters.
+`vite.config.ts`. The sample below is the part to add. Pasting it over the
+scaffold file would remove the `@` alias and `vueDevTools()`. Keep both.
+Icons and a full manifest can wait until a home-screen icon matters.
 
 ```ts
 import { VitePWA } from "vite-plugin-pwa"
