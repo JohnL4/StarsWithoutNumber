@@ -1,4 +1,7 @@
 <script lang="ts">
+import { useDraggable } from "@vueuse/core"
+import { ref } from "vue"
+
 type DieOption = {
   sides: number
   label: string
@@ -8,7 +11,29 @@ type KeepMode = "highest" | "lowest"
 
 export default {
   name: "DiceRoller",
+  props: {
+    active: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  setup() {
+    const panel = ref<HTMLElement | null>(null)
+    const handle = ref<HTMLElement | null>(null)
+    const { style } = useDraggable(panel, {
+      handle,
+      initialValue: {
+        x: Math.max(16, window.innerWidth - 304),
+        y: 72,
+      },
+      containerElement: document.documentElement,
+      restrictInView: true,
+      preventDefault: true,
+    })
+    return { panel, handle, dragStyle: style }
+  },
   data(): {
+    open: boolean
     sides: number
     count: number
     keep: number
@@ -19,6 +44,7 @@ export default {
     rolledCount: number
   } {
     return {
+      open: false,
       sides: 6,
       count: 3,
       keep: 3,
@@ -67,6 +93,12 @@ export default {
     },
   },
   methods: {
+    show() {
+      this.open = true
+    },
+    dismiss() {
+      this.open = false
+    },
     isCompleteCount(value: number | string): boolean {
       if (typeof value === "string" && value.trim() === "") {
         return false
@@ -120,60 +152,133 @@ export default {
 </script>
 
 <template>
-  <form class="roller" @submit.prevent="roll">
-    <label>
-      Sides
-      <select v-model.number="sides">
-        <option v-for="option in dieOptions" :key="option.sides" :value="option.sides">
-          {{ option.label }}
-        </option>
-      </select>
-    </label>
+  <Teleport to="body">
+    <div class="dice-layer">
+      <button v-show="active && !open" type="button" class="launcher" @click="show">
+        Dice
+      </button>
 
-    <label>
-      Dice
-      <input v-model.number="count" type="number" min="1" max="20" />
-    </label>
+      <Transition name="dice-fade">
+        <div v-show="active && open" ref="panel" class="panel" :style="dragStyle">
+        <header class="header">
+          <div ref="handle" class="handle">Dice</div>
+          <button type="button" class="close" @click="dismiss">Close</button>
+        </header>
 
-    <div class="keep">
-      <select v-model="keepMode" aria-label="Keep highest or lowest">
-        <option value="highest">Highest</option>
-        <option value="lowest">Lowest</option>
-      </select>
-      <input
-        v-model.number="keep"
-        type="number"
-        min="1"
-        :max="clampCount(count)"
-        aria-label="Dice to keep"
-      />
+        <form class="roller" @submit.prevent="roll">
+          <label>
+            Sides
+            <select v-model.number="sides">
+              <option v-for="option in dieOptions" :key="option.sides" :value="option.sides">
+                {{ option.label }}
+              </option>
+            </select>
+          </label>
+
+          <label>
+            Dice
+            <input v-model.number="count" type="number" min="1" max="20" />
+          </label>
+
+          <div class="keep">
+            <select v-model="keepMode" aria-label="Keep highest or lowest">
+              <option value="highest">Highest</option>
+              <option value="lowest">Lowest</option>
+            </select>
+            <input
+              v-model.number="keep"
+              type="number"
+              min="1"
+              :max="clampCount(count)"
+              aria-label="Dice to keep"
+            />
+          </div>
+
+          <button type="submit">Roll</button>
+        </form>
+
+        <p class="notation">{{ notation }}</p>
+
+        <ol class="faces">
+          <li
+            v-for="(face, index) in sortedFaces"
+            :key="index"
+            :class="{ dropped: !isKept(index) }"
+          >
+            {{ face }}
+          </li>
+        </ol>
+
+        <p class="sum">Sum: {{ sum }}</p>
+        </div>
+      </Transition>
     </div>
-
-    <button type="submit">Roll</button>
-  </form>
-
-  <p class="notation">{{ notation }}</p>
-
-  <ol class="faces">
-    <li
-      v-for="(face, index) in sortedFaces"
-      :key="index"
-      :class="{ dropped: !isKept(index) }"
-    >
-      {{ face }}
-    </li>
-  </ol>
-
-  <p class="sum">Sum: {{ sum }}</p>
+  </Teleport>
 </template>
 
 <style scoped>
+.dice-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.launcher,
+.panel {
+  pointer-events: auto;
+}
+
+.launcher {
+  position: fixed;
+  top: 72px;
+  right: 16px;
+}
+
+.panel {
+  position: fixed;
+  width: 18rem;
+  padding: 0.75rem;
+  background: var(--color-background-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.dice-fade-enter-active,
+.dice-fade-leave-active {
+  transition: opacity 200ms ease;
+}
+
+.dice-fade-enter-from,
+.dice-fade-leave-to {
+  opacity: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.handle {
+  flex: 1;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.handle:active {
+  cursor: grabbing;
+}
+
 .roller {
   display: flex;
   flex-wrap: wrap;
   align-items: end;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 label,
@@ -203,8 +308,18 @@ button {
 }
 
 .notation,
+.sum,
+.faces li {
+  user-select: text;
+}
+
+.notation,
 .sum {
   margin-bottom: 0.75rem;
+}
+
+.sum {
+  margin-bottom: 0;
 }
 
 .faces {

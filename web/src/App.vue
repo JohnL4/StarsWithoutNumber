@@ -1,6 +1,20 @@
 <script lang="ts">
+import DiceRoller from "@/components/DiceRoller.vue"
+
 export default {
   name: "App",
+  components: { DiceRoller },
+  data(): { diceRoutes: string[] } {
+    return {
+      diceRoutes: ["character", "sector"],
+    }
+  },
+  computed: {
+    diceActive(): boolean {
+      const name = this.$route.name
+      return typeof name === "string" && this.diceRoutes.includes(name)
+    },
+  },
 }
 </script>
 
@@ -12,6 +26,7 @@ export default {
     <RouterLink to="/hello">Original Hello</RouterLink>
   </nav>
   <RouterView />
+  <DiceRoller :active="diceActive" />
 </template>
 
 <style scoped>
