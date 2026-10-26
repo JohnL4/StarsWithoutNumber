@@ -31,7 +31,7 @@ New single-file components use the Options API: `export default` with `data`,
 `src/stores/counter.ts` come from the scaffold. Copy the samples in
 [src/views](src/views/README.md) and [src/stores](src/stores/README.md).
 
-## Install
+## Install app requirements
 
 From the repository root. PowerShell needs the quoted `--`. Do not pass
 `--force`. When asked what to do with the existing `web` directory, choose
@@ -80,7 +80,7 @@ published app need HTTPS, which is covered in
 
 The canvas mount is in [src/views/README.md](src/views/README.md).
 
-## Dev server
+## Run dev server
 
 Use two terminals. From the repo root, start the Go server with the command
 in [cmd/server](../cmd/server/README.md). From `web`:
