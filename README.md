@@ -1,5 +1,25 @@
 # Stars Without Number
 
+* https://sine-nomine-publishing.myshopify.com/collections/stars-without-number
+* https://www.drivethrurpg.com/en/product/226996/stars-without-number-revised-edition
+
+## Todo/Roadmap
+
+- [ ] Deploy to Amazon
+- [ ] Character generation
+  - [ ] Pauses for user interaction (swap two? add 14?)
+  - [ ] Look up rule for 14
+- [ ] Sector generation -- needed for character generation, but more complicated
+- [ ] Learn:
+  - [ ] Learn Vue (duh)
+  - [ ] Learn TypeScript (and modern Javascript)
+  - [ ] Learn modern html, css
+  - [ ] Learn Go
+  - [ ] Vite? Playwright?
+
+
+## Technical details
+
 Go and SQLite are the authority for characters, campaigns, and anything that
 must survive a refresh. Pinia holds the latest snapshot the server sent. Pixi
 holds sprites, the camera, and tweens.
