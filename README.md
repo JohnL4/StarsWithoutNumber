@@ -6,6 +6,8 @@
 ## Todo/Roadmap
 
 - [ ] Deploy to Amazon
+- [ ] Add more dice: 4, 8, 12, 20 sides
+- [ ] Option to reroll 1s (show old dice struck through? Probably not necessary? Log to console?)
 - [ ] Character generation
   - [ ] Pauses for user interaction (swap two? add 14?)
   - [ ] Look up rule for 14
